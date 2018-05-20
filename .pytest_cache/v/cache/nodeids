@@ -1,0 +1,8 @@
+[
+  "sugar-bliss-backend/tests/test_params.py::test_foods[_mini_cupcakes-0-None-None]",
+  "sugar-bliss-backend/tests/test_params.py::test_foods[_mini_cupcakes-42-25-20]",
+  "sugar-bliss-backend/tests/test_params.py::test_foods[_mini_cupcakes-1000-None-None]",
+  "sugar-bliss-backend/tests/test_params.py::test_foods[_regular_cupcakes-46-55-80]",
+  "sugar-bliss-backend/tests/test_params.py::test_foods[_tiers-5-25-25]",
+  "sugar-bliss-backend/tests/test_params.py::test_price"
+]
