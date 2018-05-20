@@ -1,6 +1,0 @@
-{
-  "sugar-bliss-backend/tests/test_params.py::test_convert_numeric": true,
-  "sugar-bliss-backend/tests/test_params.py::test_convert_numeric[sample-expected0]": true,
-  "sugar-bliss-backend/tests/test_params.py::test_foods[mini_cupcakes-0-5-None]": true,
-  "sugar-bliss-backend/tests/test_params.py::test_foods[tiers-46-25-25]": true
-}
