@@ -1,5 +1,6 @@
 from chalice import Chalice
-from sugar_bliss_backend import calculate
+from chalicelib.sugar_bliss_backend import calculate
+
 
 app = Chalice(app_name='sugar-bliss-backend')
 app.debug = True

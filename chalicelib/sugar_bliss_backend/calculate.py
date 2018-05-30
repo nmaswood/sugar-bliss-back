@@ -1,6 +1,6 @@
-import sugar_bliss_backend.delivery as delivery
-import sugar_bliss_backend.combine as combine
-import sugar_bliss_backend.params as params
+import chalicelib.sugar_bliss_backend.delivery as delivery
+import chalicelib.sugar_bliss_backend.combine as combine
+import chalicelib.sugar_bliss_backend.params as params
 
 
 def calculate(obj):
