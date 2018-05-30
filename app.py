@@ -6,7 +6,7 @@ app = Chalice(app_name='sugar-bliss-backend')
 app.debug = True
 
 
-@app.route('/submit', methods=('POST',))
+@app.route('/submit', methods=('POST',), cors=True)
 def submit():
     data = app.current_request.json_body
     res = calculate.calculate(data)
