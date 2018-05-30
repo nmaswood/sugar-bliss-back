@@ -1,16 +1,20 @@
 import pandas as pd
-from pdb import set_trace
 from dateutil.parser import parse
 import re
+import os.path
 
 import calendar
 
 
 def get_dfs():
+    root = os.path.dirname(__file__)
     _dir = 'csvs/delivery/'
 
     files = ('city_final.csv', 'loop_final.csv', 'suburb_final.csv')
-    files = [f'{_dir}{f}' for f in files]
+    files = [
+        os.path.join(root, _dir, f)
+        for f in files
+    ]
 
     def process_df(filename):
         df = pd.read_csv(filename)
