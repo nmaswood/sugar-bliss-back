@@ -5,12 +5,12 @@ from dateutil.parser import parse
 
 
 FOOD_KEYS = {
-    'miniCupcakes',
-    'regularCupcakes',
     'cakePops',
     'frenchMacarons',
+    'miniCupcakes',
+    'other',
+    'regularCupcakes',
     'tiers',
-    'other'
 }
 
 VALID_TIMES = {

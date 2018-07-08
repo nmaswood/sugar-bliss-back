@@ -150,49 +150,14 @@ FUNCTIONS_DICT = {
 }
 
 
-def _convert_numeric_inner(data_obj):
-    copy = dict(data_obj)
+def price(data_obj):
 
-    keys = {
-        'cakePops', 'frenchMacarons', 'miniCupcakes',
-        'regularCupcakes', 'other', 'tiers'
-    }
-
-    for key in keys:
-
-        value = copy[key]
-        copy[key] = int(float(value))
-
-    return copy
-
-
-def _convert_numeric(data_obj):
-    try:
-        return 200, _convert_numeric_inner(data_obj)
-    except Exception as e:
-        return 401, e
-
-
-def _sanitize(data_obj):
-    copy = dict(data_obj)
-
-    for key, value in copy.items():
-
-        if value < 0:
-            copy[key] = 0
-
-    return 200, copy
-
-
-def _filter(data_obj):
-
-    return 200, {
+    without_time_or_zip_code = {
         k: v for k, v in data_obj.items() if
         k in DZN or k in BAG
     }
 
-
-def _food_item_pricing(data_obj):
+    difference = data_obj['end_time'].hour - data_obj['start_time'].hour
 
     d = {
         'ld_sum': 0,
@@ -201,10 +166,11 @@ def _food_item_pricing(data_obj):
         'usm_count': 0,
         'warnings': [],
         'custom': [],
-        'per_item': {}
+        'per_item': {},
+        'time_difference': difference
     }
 
-    for name, value in data_obj.items():
+    for name, value in without_time_or_zip_code.items():
 
         f = FUNCTIONS_DICT[name]
         status, _input, ld, usm = f(value)
@@ -241,25 +207,4 @@ def _food_item_pricing(data_obj):
             d['ld_sum'] += ld
             d['usm_count'] += 1
             d['usm_sum'] += usm
-
     return d
-
-
-def price(data_object):
-
-    copy = dict(data_object)
-
-    preprocess = (
-        _filter,
-        _convert_numeric,
-        _sanitize
-    )
-
-    for f in preprocess:
-
-        res, copy = f(copy)
-
-        if res != 200:
-            raise Exception(f'{res} has been raised in {f}')
-
-    return _food_item_pricing(copy)

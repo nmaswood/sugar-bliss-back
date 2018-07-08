@@ -128,6 +128,8 @@ def get_dict(columns, times, carriers, row, date, start_time, end_time):
 
     # TODO This truncates to a single one.
     # Should check optimal price first
+    # Factor in twice the price if you have to!!!
+    # Tell user price doubled and why.
 
     res = {}
 
