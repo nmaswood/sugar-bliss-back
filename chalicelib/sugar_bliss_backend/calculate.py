@@ -82,14 +82,27 @@ def calculate(obj):
     start_time = obj['time_start']
     end_time = obj['time_end']
 
+    zipcode_df = delivery.zipcode_to_df(zipcode)
 
-    zipcode_map = delivery.get_dfs()
-    assert 0
+    if zipcode_df is None:
+        return {
+            'status': 'fail',
+            'errors': 'Could not find zipcode in data'
+        }
 
     base_price_dict = delivery.return_carrier_and_prices(
-        zipcode_map,
+        zipcode_df,
         zipcode,
-        time)
+        date,
+        start_time,
+        end_time)
+
+    if not base_price_dict:
+        return {
+            'status': 'fail',
+            'errors': 'Calculation failed while finding base price.'
+        }
+
     item_price = params.price(obj)
     combined = combine.combine(base_price_dict, item_price)
 
