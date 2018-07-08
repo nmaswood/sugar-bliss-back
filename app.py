@@ -14,7 +14,15 @@ def ping():
 
 @app.route('/submit', methods=('POST',), cors=True)
 def submit():
-    data = app.current_request.json_body
-    set_trace()
-    res = calculate.calculate(data)
+    json_obj = app.current_request.json_body
+    errors = calculate.validate(json_obj)
+
+    if errors:
+        return {
+            'status': 'fail',
+            'errors': errors
+        }
+
+    processed = calculate.preprocess(json_obj)
+    res = calculate.calculate(processed)
     return res

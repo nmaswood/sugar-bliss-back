@@ -21,18 +21,13 @@ def get_dfs():
         df.Zipcode = df.Zipcode.astype(str)
         return df
 
-    return [process_df(f) for f in files]
+    dfs = [process_df(f) for f in files]
 
+    res = pd.concat(dfs)
 
-def process_zipcodes(df):
-    codes = set(df['Zipcode'].values[2:])
-    codes = {code.replace('.0', '') for code in codes}
-    return codes, df
+    assert 0
+    return res
 
-
-def zipcode_to_df_map():
-    dfs = get_dfs()
-    return [process_zipcodes(df) for df in dfs]
 
 
 def zipcode_to_df(zipcode_maps, zipcode, time):
