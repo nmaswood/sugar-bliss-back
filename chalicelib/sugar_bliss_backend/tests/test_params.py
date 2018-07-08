@@ -1,5 +1,5 @@
 import pytest
-import sugar_bliss_backend.params as p
+import chalicelib.sugar_bliss_backend.params as p
 from pdb import set_trace
 
 LD_INDEX = 2

@@ -1,5 +1,5 @@
 from pdb import set_trace
-import sugar_bliss_backend.calculate as cal
+import chalicelib.sugar_bliss_backend.calculate as cal
 
 
 def generate_results():

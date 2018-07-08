@@ -1,4 +1,4 @@
-import sugar_bliss_backend.combine as c
+import chalicelib.sugar_bliss_backend.combine as c
 
 
 BASE_PRICES = {

@@ -1,5 +1,5 @@
 import pytest
-import sugar_bliss_backend.delivery as d
+import chalicelib.sugar_bliss_backend.delivery as d
 
 
 @pytest.mark.parametrize('zipcode,time,expected',
