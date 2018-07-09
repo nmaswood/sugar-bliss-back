@@ -48,7 +48,8 @@ def validate(obj):
         errors.append(error)
 
     if not obj['zipCode'].startswith(ZIP_CODE_PREFIX):
-        error = "{} is not supported zipcode. Zipcode must start with '06'".format(obj['zipCode'])
+        error = "{} is not supported zipcode. Zipcode must start with '06'".format(
+                obj['zipCode'])
         errors.append(error)
 
     for key in FOOD_KEYS:
@@ -110,7 +111,7 @@ def calculate(food_obj, time_obj):
     if zipcode_df is None:
         return {
             'status': 'fail',
-            'errors': 'Could not find zipcode in data'
+            'errors': ['Could not find zipcode in data']
         }
 
     base_price_dict = delivery.return_carrier_and_prices(zipcode_df,
@@ -122,7 +123,7 @@ def calculate(food_obj, time_obj):
     if not base_price_dict:
         return {
             'status': 'fail',
-            'errors': 'Calculation failed while finding base price.'
+            'errors': ['Calculation failed while finding base price.']
         }
 
     prices_dict = params.price(food_obj)
@@ -130,7 +131,7 @@ def calculate(food_obj, time_obj):
     if prices_dict['ld'] == 0 and prices_dict['usm'] == 0 and not prices_dict['custom']:
         return {
             'status': 'fail',
-            'errors': 'Could not calculate price for carriers.'
+            'errors': ['Could not calculate price for carriers.']
         }
 
     combined = combine.combine(base_price_dict, prices_dict)
