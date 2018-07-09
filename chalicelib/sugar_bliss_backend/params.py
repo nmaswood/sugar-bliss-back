@@ -150,61 +150,38 @@ FUNCTIONS_DICT = {
 }
 
 
-def price(data_obj):
+def price(food_obj):
 
-    without_time_or_zip_code = {
-        k: v for k, v in data_obj.items() if
-        k in DZN or k in BAG
-    }
-
-    difference = data_obj['end_time'].hour - data_obj['start_time'].hour
-
-    d = {
-        'ld_sum': 0,
-        'ld_count': 0,
-        'usm_sum': 0,
-        'usm_count': 0,
-        'warnings': [],
+    res = {
+        'ld': 0,
+        'usm': 0,
         'custom': [],
-        'per_item': {},
-        'time_difference': difference
+        'per_item': {}
     }
 
-    for name, value in without_time_or_zip_code.items():
+    for name, value in food_obj.items():
 
         f = FUNCTIONS_DICT[name]
         status, _input, ld, usm = f(value)
 
-        d['per_item'][name] = {
-            'status': str(status).split('.', 1)[-1],
+        status_name = str(status).split('.', 1)[1]
+        res['per_item'][name] = {
+            'status': status_name,
             '_input': _input,
             'ld': ld,
             'usm': usm,
         }
 
-        d['ld_absent'] = False
-        d['usm_absent'] = False
-
-        if status == Status.NIL:
+        if status == Status.NIL or status == Status.LD_AND_USM_NULL:
             pass
         elif status == Status.LD_NULL:
-            d['usm_count'] += 1
-            d['usm_sum'] += usm
-            d['ld_absent'] = True
+            res['usm'] += usm
         elif status == Status.USM_NULL:
-            d['ld_count'] += 1
-            d['ld_sum'] += ld
-
-            d['usm_absent'] = True
-        elif status == Status.LD_AND_USM_NULL:
-            d['ld_absent'] = True
-            d['usm_absent'] = True
-            pass
+            res['ld'] += ld
         elif status == Status.CUSTOM:
-            d['custom'].append(name)
+            res['custom'].append(name)
         elif status == Status.OKAY:
-            d['ld_count'] += 1
-            d['ld_sum'] += ld
-            d['usm_count'] += 1
-            d['usm_sum'] += usm
-    return d
+            res['ld'] += ld
+            res['usm'] += usm
+
+    return res

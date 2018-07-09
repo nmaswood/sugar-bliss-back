@@ -95,6 +95,24 @@ def parse_time(string):
     return [parse_single_unit(x) for x in by_comma]
 
 
+def determine_multiplier(start_time, end_time):
+    time_window_difference = end_time.hour - start_time.hour
+    eight_am = parse('8am').time()
+    four_pm = parse('4pm').time()
+
+    multiplier = 1
+    if start_time < eight_am:
+        multiplier *= 2
+    if end_time > four_pm:
+        multiplier *= 2
+
+    if time_window_difference == 1:
+        multiplier *= 1.5
+    elif time_window_difference == 2:
+        multiplier *= 1.25
+
+    return multiplier
+
 def get_dict(columns, times, carriers, row, date, start_time, end_time):
 
     weekday = date.weekday()
@@ -117,26 +135,29 @@ def get_dict(columns, times, carriers, row, date, start_time, end_time):
     parsed_time = [parse_time(x) for x in times]
     time_indexes = set()
 
-    for idx, date_tuples in enumerate(parsed_time):
+    parsed_time_tuple = {}
 
-        for start_time_prime, end_time_prime in date_tuples:
+    for idx, date_tuples in enumerate(parsed_time):
+        for idx_prime, (start_time_prime, end_time_prime) in enumerate(date_tuples):
             if start_time <= start_time_prime and end_time >= end_time_prime:
+                parsed_time_tuple[idx] = idx_prime
                 time_indexes.add(idx)
-                continue
 
     union = sorted(list(date_indexes & time_indexes))
 
     # TODO This truncates to a single one.
     # Should check optimal price first
-    # Factor in twice the price if you have to!!!
-    # Tell user price doubled and why.
 
     res = {}
+    multiplier = determine_multiplier(start_time, end_time)
 
     for index in union:
+
         carrier = carriers[index]
         price = row[index]
-        res[carrier] = price
+        res[carrier] = int(price) * multiplier
+
+    res['multiplier'] = multiplier
 
     return res
 
@@ -147,7 +168,5 @@ def return_carrier_and_prices(zipcode_df, zipcode, date, start_time, end_time):
     columns_prime, times_prime, carriers_prime, row_prime = filter_by_carriers(
         columns, times, carriers, row)
 
-    info_dict = get_dict(columns_prime, times_prime, carriers_prime, row_prime,
-                         date, start_time, end_time)
-
-    return info_dict
+    return get_dict(columns_prime, times_prime, carriers_prime, row_prime,
+                    date, start_time, end_time)

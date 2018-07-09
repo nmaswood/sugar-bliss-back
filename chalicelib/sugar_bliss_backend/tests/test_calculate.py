@@ -84,47 +84,47 @@ def test_calculate():
         'dateTime': '2018-05-16',
         'time': '10am-12pm'
     }
-
-    expected = {'base_price_dict': {'LS': '19', 'USM': '24'},
-                'food_item_dict': {'custom': [],
-                                   'ld_absent': False,
-                                   'ld_count': 1,
-                                   'ld_sum': 15,
-                                   'per_item': {'cakePops': {'_input': 0,
-                                                             'ld': None,
-                                                             'status': 'NIL',
-                                                             'usm': None},
-                                                'frenchMacarons': {'_input': 0,
+    expected = {
+        'data': {'all': {'base_price_dict': {'LS': 23.75,
+                                             'USM': 30.0,
+                                             'multiplier': 1.25},
+                         'food_item_dict': {'custom': [],
+                                            'ld': 15,
+                                            'per_item': {'cakePops': {'_input': 0,
+                                                                      'ld': None,
+                                                                      'status': 'NIL',
+                                                                      'usm': None},
+                                                         'frenchMacarons': {'_input': 0,
+                                                                            'ld': None,
+                                                                            'status': 'NIL',
+                                                                            'usm': None},
+                                                         'miniCupcakes': {'_input': 4,
+                                                                          'ld': 15,
+                                                                          'status': 'USM_NULL',
+                                                                          'usm': None},
+                                                         'other': {'_input': 0,
                                                                    'ld': None,
                                                                    'status': 'NIL',
                                                                    'usm': None},
-                                                'miniCupcakes': {'_input': 4,
-                                                                 'ld': 15,
-                                                                 'status': 'USM_NULL',
-                                                                 'usm': None},
-                                                'other': {'_input': 0,
-                                                          'ld': None,
-                                                          'status': 'NIL',
-                                                          'usm': None},
-                                                'regularCupcakes': {'_input': 0,
-                                                                    'ld': None,
-                                                                    'status': 'NIL',
-                                                                    'usm': None},
-                                                'tiers': {'_input': 0,
-                                                          'ld': None,
-                                                          'status': 'NIL',
-                                                          'usm': None}},
-                                   'usm_absent': False,
-                                   'usm_count': 0,
-                                   'usm_sum': 0,
-                                   'warnings': []},
-                'ld_final': 34.0,
-                'price': 24.0,
-                'usm_final': 24.0,
-                'vendor': 'USM'}
+                                                         'regularCupcakes': {'_input': 0,
+                                                                             'ld': None,
+                                                                             'status': 'NIL',
+                                                                             'usm': None},
+                                                         'tiers': {'_input': 0,
+                                                                   'ld': None,
+                                                                   'status': 'NIL',
+                                                                   'usm': None}},
+                                            'usm': 0}},
+                 'ld_final': 38.75,
+                 'usm_final': 30.0},
+        'status': 'success'
+    }
 
-    validated = cal.validate(i_one)
+    errors = cal.validate(i_one)
+    assert not errors
     preprocessed = cal.preprocess(i_one)
-    assert not validated
-    res = cal.calculate(preprocessed)
-    assert res == expected
+
+    food_obj, time_obj = cal.split_data(preprocessed)
+
+    res = cal.calculate(food_obj, time_obj)
+    assert res ==  expected

@@ -23,6 +23,8 @@ def submit():
             'errors': errors
         }
 
-    processed = calculate.preprocess(json_obj)
-    res = calculate.calculate(processed)
+    preprocessed = calculate.preprocess(json_obj)
+    food_obj, time_obj = calculate.split_data(preprocessed)
+    res = calculate.calculate(food_obj, time_obj)
+
     return res

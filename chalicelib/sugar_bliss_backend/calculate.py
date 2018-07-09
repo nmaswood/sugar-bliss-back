@@ -13,6 +13,13 @@ FOOD_KEYS = {
     'tiers',
 }
 
+OTHER_KEYS = {
+    'zipCode',
+    'dateTime',
+    'time_start',
+    'time_end'
+}
+
 VALID_TIMES = {
     '7am-8am', '7am-9am',
     '8am-9am', '8am-10am', '9am-10am', '9am-11am', '10am-11am',
@@ -76,11 +83,27 @@ def preprocess(obj):
     return new_obj
 
 
-def calculate(obj):
-    zipcode = obj['zipCode']
-    date = obj['date']
-    start_time = obj['time_start']
-    end_time = obj['time_end']
+def split_data(obj):
+
+    food_obj = {
+        k: v for k, v in obj.items()
+        if k in FOOD_KEYS
+    }
+
+    time_obj = {
+        k: v for k, v in obj.items()
+        if k not in FOOD_KEYS
+    }
+
+    return food_obj, time_obj
+
+
+def calculate(food_obj, time_obj):
+
+    zipcode = time_obj['zipCode']
+    date = time_obj['date']
+    start_time = time_obj['time_start']
+    end_time = time_obj['time_end']
 
     zipcode_df = delivery.zipcode_to_df(zipcode)
 
@@ -90,12 +113,11 @@ def calculate(obj):
             'errors': 'Could not find zipcode in data'
         }
 
-    base_price_dict = delivery.return_carrier_and_prices(
-        zipcode_df,
-        zipcode,
-        date,
-        start_time,
-        end_time)
+    base_price_dict = delivery.return_carrier_and_prices(zipcode_df,
+                                                         zipcode,
+                                                         date,
+                                                         start_time,
+                                                         end_time)
 
     if not base_price_dict:
         return {
@@ -103,7 +125,16 @@ def calculate(obj):
             'errors': 'Calculation failed while finding base price.'
         }
 
-    item_price = params.price(obj)
-    combined = combine.combine(base_price_dict, item_price)
+    prices_dict = params.price(food_obj)
 
-    return combined
+    if prices_dict['ld'] == 0 and prices_dict['usm'] == 0 and not prices_dict['custom']:
+        return {
+            'status': 'fail',
+            'errors': 'Could not calculate price for carriers.'
+        }
+
+    combined = combine.combine(base_price_dict, prices_dict)
+    return {
+        'status': 'success',
+        'data': combined
+    }
