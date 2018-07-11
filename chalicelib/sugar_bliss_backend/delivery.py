@@ -89,6 +89,7 @@ def parse_single_unit(string):
 
 
 def parse_time(string):
+
     string = string.replace(' ', '')
     by_comma = string.split(',')
 
@@ -133,13 +134,14 @@ def get_dict(columns, times, carriers, row, date, start_time, end_time):
             raise ValueError('Had three dashes...?')
 
     parsed_time = [parse_time(x) for x in times]
+
     time_indexes = set()
 
     parsed_time_tuple = {}
 
     for idx, date_tuples in enumerate(parsed_time):
         for idx_prime, (start_time_prime, end_time_prime) in enumerate(date_tuples):
-            if start_time <= start_time_prime and end_time >= end_time_prime:
+            if start_time_prime <= start_time and end_time <= end_time_prime:
                 parsed_time_tuple[idx] = idx_prime
                 time_indexes.add(idx)
 
