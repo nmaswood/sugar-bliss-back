@@ -10,8 +10,8 @@ def generate_results():
         'regularCupcakes': '20',
         'cakePops': '30',
         'frenchMacarons': '40',
-        'tiers': '50',
-        'other': '60',
+        'tiers': '3',
+        'other': '3',
         'zipCode': '60601',
         'dateTime': '2018-07-21',
         'time': '10am-12pm'
@@ -43,7 +43,7 @@ def test_validate():
     negative_off['other'] = '-1'
     negative_errors = cal.validate(negative_off)
 
-    assert 'other cannot have negative value.' in negative_errors
+    assert 'Number -1 for other is out of the range 1-5' in negative_errors
 
     sunday_off = dict(init_obj)
     sunday_off['dateTime'] = '2018-07-08'
@@ -60,8 +60,8 @@ def test_preprocess():
         'regularCupcakes': 20,
         'cakePops': 30,
         'frenchMacarons': 40,
-        'tiers': 50,
-        'other': 60,
+        'tiers': 3,
+        'other': 3,
         'zipCode': '60601',
         'date': parse('2018-07-21').date(),
         'time_start': parse('10am').time(),

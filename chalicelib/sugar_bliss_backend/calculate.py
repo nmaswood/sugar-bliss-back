@@ -29,6 +29,15 @@ VALID_TIMES = {
 
 ZIP_CODE_PREFIX = '60'
 
+FOOD_MAXS = {
+    'miniCupcakes': (8, 56),
+    'regularCupcakes': (5, 52),
+    'cakePops': (23, 110),
+    'frenchMacarons': (17, 79),
+    'tiers': (1, 5),
+    'other': (1, 5)
+}
+
 
 def validate(obj):
     errors = []
@@ -49,19 +58,27 @@ def validate(obj):
 
     if not obj['zipCode'].startswith(ZIP_CODE_PREFIX):
         error = "{} is not supported zipcode. Zipcode must start with '06'".format(
-                obj['zipCode'])
+            obj['zipCode'])
         errors.append(error)
 
+    non_zero = False
     for key in FOOD_KEYS:
         try:
-            int(obj[key])
+            num = int(obj[key])
         except Exception:
             error = 'Could not convert {} to integer.'.format(key)
             errors.append(error)
 
-        if int(obj[key]) < 0:
-            error = '{} cannot have negative value.'.format(key)
-            errors.append(error)
+        food_min, food_max = FOOD_MAXS[key]
+        if num != 0:
+            non_zero = True
+            if not (food_min <= num <= food_max):
+                error = 'Number {} for {} is out of the range {}-{}'.format(
+                        num, key, food_min, food_max)
+                errors.append(error)
+
+    if not non_zero:
+        errors.append('All values posted were 0')
 
     return errors
 
