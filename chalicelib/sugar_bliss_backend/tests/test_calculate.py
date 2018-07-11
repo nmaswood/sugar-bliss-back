@@ -98,7 +98,7 @@ def test_calculate():
                                                                             'ld': None,
                                                                             'status': 'NIL',
                                                                             'usm': None},
-                                                         'miniCupcakes': {'_input': 4,
+                                                         'miniCupcakes': {'_input': 25,
                                                                           'ld': 15,
                                                                           'status': 'USM_NULL',
                                                                           'usm': None},

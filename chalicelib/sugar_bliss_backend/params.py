@@ -167,7 +167,7 @@ def price(food_obj):
         status_name = str(status).split('.', 1)[1]
         res['per_item'][name] = {
             'status': status_name,
-            '_input': _input,
+            '_input': value,
             'ld': ld,
             'usm': usm,
         }
