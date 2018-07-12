@@ -3,6 +3,8 @@ import chalicelib.sugar_bliss_backend.combine as combine
 import chalicelib.sugar_bliss_backend.params as params
 from dateutil.parser import parse
 
+from pdb import set_trace
+
 
 FOOD_KEYS = {
     'cakePops',
@@ -137,7 +139,7 @@ def calculate(food_obj, time_obj):
                                                          start_time,
                                                          end_time)
 
-    if not base_price_dict:
+    if not base_price_dict or base_price_dict['status'] == 'fail':
         return {
             'status': 'fail',
             'errors': ['Calculation failed while finding base price.']

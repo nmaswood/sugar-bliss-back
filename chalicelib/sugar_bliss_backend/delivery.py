@@ -6,6 +6,22 @@ import os.path
 import calendar
 
 
+def get_overlap(a, b):
+
+    left, right = a
+
+    left_hour, right_hour = left.hour, right.hour
+
+    left_prime, right_prime = b
+
+    left_prime_hour, right_prime_hour = left_prime.hour, right_prime.hour
+    return max(0, min(right_hour, right_prime_hour) - max(left_hour, left_prime_hour))
+
+
+
+from pdb import set_trace
+
+
 def get_dfs():
     root = os.path.dirname(__file__)
     _dir = 'csvs/delivery/'
@@ -114,6 +130,7 @@ def determine_multiplier(start_time, end_time):
 
     return multiplier
 
+
 def get_dict(columns, times, carriers, row, date, start_time, end_time):
 
     weekday = date.weekday()
@@ -139,9 +156,13 @@ def get_dict(columns, times, carriers, row, date, start_time, end_time):
 
     parsed_time_tuple = {}
 
+    time_tuple = start_time, end_time
+
     for idx, date_tuples in enumerate(parsed_time):
-        for idx_prime, (start_time_prime, end_time_prime) in enumerate(date_tuples):
-            if start_time_prime <= start_time and end_time <= end_time_prime:
+        for idx_prime, time_tuple_prime in enumerate(date_tuples):
+
+            overlap = get_overlap(time_tuple, time_tuple_prime)
+            if overlap:
                 parsed_time_tuple[idx] = idx_prime
                 time_indexes.add(idx)
 
@@ -153,13 +174,36 @@ def get_dict(columns, times, carriers, row, date, start_time, end_time):
     res = {}
     multiplier = determine_multiplier(start_time, end_time)
 
-    for index in union:
+    carrier_prices = []
 
+    for index in sorted(union):
+        carrier = carriers[index]
+        price = row[index]
+        date = parsed_dates[index]
+        times = parsed_time[index]
+        time = times[parsed_time_tuple[index]]
+
+        carrier_prices.append({
+            'carrier': carrier,
+            'price': price,
+            'date': date,
+            'time': time
+            })
+
+    set_trace()
+    for index in union:
         carrier = carriers[index]
         price = row[index]
         res[carrier] = int(price) * multiplier
 
+    if not union:
+        return {
+                'status': 'fail',
+                'errors': 'Could not find a valid time for either carrier.'
+                }
+
     res['multiplier'] = multiplier
+    res['status'] = 'success'
 
     return res
 
