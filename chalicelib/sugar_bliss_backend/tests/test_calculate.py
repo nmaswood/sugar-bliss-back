@@ -84,41 +84,8 @@ def test_calculate():
         'dateTime': '2018-05-16',
         'time': '10am-12pm'
     }
-    expected = {
-        'data': {'all': {'base_price_dict': {'LS': 23.75,
-                                             'USM': 30.0,
-                                             'multiplier': 1.25},
-                         'food_item_dict': {'custom': [],
-                                            'ld': 15,
-                                            'per_item': {'cakePops': {'_input': 0,
-                                                                      'ld': None,
-                                                                      'status': 'NIL',
-                                                                      'usm': None},
-                                                         'frenchMacarons': {'_input': 0,
-                                                                            'ld': None,
-                                                                            'status': 'NIL',
-                                                                            'usm': None},
-                                                         'miniCupcakes': {'_input': 25,
-                                                                          'ld': 15,
-                                                                          'status': 'USM_NULL',
-                                                                          'usm': None},
-                                                         'other': {'_input': 0,
-                                                                   'ld': None,
-                                                                   'status': 'NIL',
-                                                                   'usm': None},
-                                                         'regularCupcakes': {'_input': 0,
-                                                                             'ld': None,
-                                                                             'status': 'NIL',
-                                                                             'usm': None},
-                                                         'tiers': {'_input': 0,
-                                                                   'ld': None,
-                                                                   'status': 'NIL',
-                                                                   'usm': None}},
-                                            'usm': 0}},
-                 'ld_final': 38.75,
-                 'usm_final': 30.0},
-        'status': 'success'
-    }
+    expected = {'status': 'success', 'data': {'base_price_dict': {'status': 'success', 'multiplier': 1.25, 'carrier_prices': [{'carrier': 'LS', 'price': 23.75, 'date': 'Mon-Sun', 'time': '11:00:00-13:00:00'}, {'carrier': 'USM', 'price': 30.0, 'date': 'Mon-Fri', 'time': '11:00:00-13:00:00'}]}, 'food_item_dict': {'ld': 15, 'usm': 0, 'custom': [], 'per_item': {'regularCupcakes': {'status': 'NIL', '_input': 0, 'ld': None, 'usm': None}, 'cakePops': {'status': 'NIL', '_input': 0, 'ld': None, 'usm': None}, 'frenchMacarons': {'status': 'NIL', '_input': 0, 'ld': None, 'usm': None}, 'miniCupcakes': {'status': 'USM_NULL', '_input': 25, 'ld': 15, 'usm': None}, 'other': {'status': 'NIL', '_input': 0, 'ld': None, 'usm': None}, 'tiers': {'status': 'NIL', '_input': 0, 'ld': None, 'usm': None}}}}}
+
 
     errors = cal.validate(i_one)
     assert not errors
@@ -127,4 +94,4 @@ def test_calculate():
     food_obj, time_obj = cal.split_data(preprocessed)
 
     res = cal.calculate(food_obj, time_obj)
-    assert res ==  expected
+    assert res == expected

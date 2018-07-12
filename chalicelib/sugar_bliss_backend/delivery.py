@@ -18,9 +18,6 @@ def get_overlap(a, b):
     return max(0, min(right_hour, right_prime_hour) - max(left_hour, left_prime_hour))
 
 
-from pdb import set_trace
-
-
 def get_dfs():
     root = os.path.dirname(__file__)
     _dir = 'csvs/delivery/'
@@ -177,13 +174,42 @@ def get_dict(columns, times, carriers, row, date, start_time, end_time):
     for index in sorted(union):
         carrier = carriers[index]
         price = row[index]
+
         date = parsed_dates[index]
+        if len(date) == 1:
+            first = date[0]
+            date = calendar.day_abbr[first]
+        elif len(date) == 2:
+            first, second = date[0], date[1]
+            date = '{}-{}'.format(
+                calendar.day_abbr[first],
+                calendar.day_abbr[second]
+            )
+        else:
+            return {
+                'status': 'fail',
+                'errors': 'Invalid date range'
+            }
+
         times = parsed_time[index]
         time = times[parsed_time_tuple[index]]
 
+        if len(time) == 1:
+            first = time[0]
+            time = str(first)
+        elif len(time) == 2:
+            first = time[0]
+            second = time[1]
+            time = '{}-{}'.format(first, second)
+        else:
+            return {
+                'status': 'fail',
+                'errors': 'Invalid time range'
+            }
+
         carrier_prices.append({
             'carrier': carrier,
-            'price': price,
+            'price': int(price) * multiplier,
             'date': date,
             'time': time
         })
@@ -193,8 +219,6 @@ def get_dict(columns, times, carriers, row, date, start_time, end_time):
             'status': 'fail',
             'errors': 'Could not find a valid time for either carrier.'
         }
-
-    # todo tommorow format prices
 
     return {
         'status': 'success',
