@@ -18,7 +18,6 @@ def get_overlap(a, b):
     return max(0, min(right_hour, right_prime_hour) - max(left_hour, left_prime_hour))
 
 
-
 from pdb import set_trace
 
 
@@ -171,7 +170,6 @@ def get_dict(columns, times, carriers, row, date, start_time, end_time):
     # TODO This truncates to a single one.
     # Should check optimal price first
 
-    res = {}
     multiplier = determine_multiplier(start_time, end_time)
 
     carrier_prices = []
@@ -188,24 +186,21 @@ def get_dict(columns, times, carriers, row, date, start_time, end_time):
             'price': price,
             'date': date,
             'time': time
-            })
+        })
 
-    set_trace()
-    for index in union:
-        carrier = carriers[index]
-        price = row[index]
-        res[carrier] = int(price) * multiplier
-
-    if not union:
+    if not carrier_prices:
         return {
-                'status': 'fail',
-                'errors': 'Could not find a valid time for either carrier.'
-                }
+            'status': 'fail',
+            'errors': 'Could not find a valid time for either carrier.'
+        }
 
-    res['multiplier'] = multiplier
-    res['status'] = 'success'
+    # todo tommorow format prices
 
-    return res
+    return {
+        'status': 'success',
+        'multiplier': multiplier,
+        'carrier_prices': carrier_prices,
+    }
 
 
 def return_carrier_and_prices(zipcode_df, zipcode, date, start_time, end_time):
