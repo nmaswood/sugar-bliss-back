@@ -84,7 +84,8 @@ def test_calculate():
         'dateTime': '2018-05-16',
         'time': '10am-12pm'
     }
-    expected = {'status': 'success', 'data': {'base_price_dict': {'status': 'success', 'multiplier': 1.25, 'carrier_prices': [{'carrier': 'LS', 'price': 23.75, 'date': 'Mon-Sun', 'time': '11:00:00-13:00:00'}, {'carrier': 'USM', 'price': 30.0, 'date': 'Mon-Fri', 'time': '11:00:00-13:00:00'}]}, 'food_item_dict': {'ld': 15, 'usm': 0, 'custom': [], 'per_item': {'regularCupcakes': {'status': 'NIL', '_input': 0, 'ld': None, 'usm': None}, 'cakePops': {'status': 'NIL', '_input': 0, 'ld': None, 'usm': None}, 'frenchMacarons': {'status': 'NIL', '_input': 0, 'ld': None, 'usm': None}, 'miniCupcakes': {'status': 'USM_NULL', '_input': 25, 'ld': 15, 'usm': None}, 'other': {'status': 'NIL', '_input': 0, 'ld': None, 'usm': None}, 'tiers': {'status': 'NIL', '_input': 0, 'ld': None, 'usm': None}}}}}
+    expected = {'status': 'success', 'data': {'base_price_dict': {'status': 'success', 'multiplier': 1.25, 'carrier_prices': [{'carrier': 'LS', 'price': 23.75, 'date': 'Mon-Sun', 'time': '11:00:00-13:00:00'}, {'carrier': 'USM', 'price': 30.0, 'date': 'Mon-Fri', 'time': '11:00:00-13:00:00'}], 'best_ld_carrier': {'carrier': 'LS', 'price': 23.75, 'date': 'Mon-Sun', 'time': '11:00:00-13:00:00'}, 'best_ld_price': 38.75, 'best_usm': {'carrier': 'USM', 'price': 30.0, 'date': 'Mon-Fri', 'time': '11:00:00-13:00:00'}, 'best_usm_price': 23.75}, 'food_item_dict': {'ld': 15, 'usm': 0, 'custom': [], 'per_item': {'cakePops': {'status': 'NIL', '_input': 0, 'ld': None, 'usm': None}, 'frenchMacarons': {'status': 'NIL', '_input': 0, 'ld': None, 'usm': None}, 'regularCupcakes': {'status': 'NIL', '_input': 0, 'ld': None, 'usm': None}, 'other': {'status': 'NIL', '_input': 0, 'ld': None, 'usm': None}, 'tiers': {'status': 'NIL', '_input': 0, 'ld': None, 'usm': None}, 'miniCupcakes': {'status': 'USM_NULL', '_input': 25, 'ld': 15, 'usm': None}}}}}
+
 
 
     errors = cal.validate(i_one)
