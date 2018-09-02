@@ -20,13 +20,13 @@ def _mini_cupcakes(dzn):
         return Status.NIL, 0, None, None
 
     if 1 <= dzn <= 8:
-        return Status.LD_AND_USM_NULL, 1, None, None
+        return Status.OKAY, 1, 0, 0
     elif 9 <= dzn <= 16:
-        return Status.USM_NULL, 2, 5, None
+        return Status.OKAY, 2, 5, 0
     elif 17 <= dzn <= 24:
-        return Status.USM_NULL, 3, 10, None
+        return Status.OKAY, 3, 10, 0
     elif 25 <= dzn <= 32:
-        return Status.USM_NULL, 4, 15, None
+        return Status.OKAY, 4, 15, 0
     elif 33 <= dzn <= 40:
         return Status.OKAY, 5, 20, 10
     elif 41 <= dzn <= 48:
@@ -43,13 +43,13 @@ def _regular_cupcakes(dzn):
         return Status.NIL, 0, None, None
 
     if 1 <= dzn <= 4:
-        return Status.LD_AND_USM_NULL, 1, None, None
+        return Status.OKAY, 1, 0, 0
     elif 5 <= dzn <= 8:
-        return Status.USM_NULL, 2, 5, None
+        return Status.OKAY, 2, 5, 0
     elif 9 <= dzn <= 12:
-        return Status.USM_NULL, 3, 10, None
+        return Status.OKAY, 3, 10, 0
     elif 13 <= dzn <= 16:
-        return Status.USM_NULL, 4, 15, None
+        return Status.OKAY, 4, 15, 0
     elif 17 <= dzn <= 20:
         return Status.OKAY, 5, 20, 10
     elif 21 <= dzn <= 24:
@@ -76,9 +76,9 @@ def _cake_pops(dzn):
         return Status.NIL, 0, None, None
 
     if 1 <= dzn <= 22:
-        return Status.LD_AND_USM_NULL, 1, None, None
+        return Status.OKAY, 1, 0, 0
     elif 23 <= dzn <= 44:
-        return Status.USM_NULL, 2, 5, None
+        return Status.OKAY, 2, 5, 0
     elif 45 <= dzn <= 66:
         return Status.OKAY, 3, 10, 15
     elif 67 <= dzn <= 88:
@@ -93,13 +93,13 @@ def _french_macarons(dzn):
         return Status.NIL, 0, None, None
 
     if 1 <= dzn <= 16:
-        return Status.LD_AND_USM_NULL, 1, None, None
+        return Status.OKAY, 1, 0, 0
     elif 17 <= dzn <= 32:
-        return Status.USM_NULL, 2, 5, None
+        return Status.OKAY, 2, 5, 0
     elif 33 <= dzn <= 48:
-        return Status.USM_NULL, 3, 10, None
+        return Status.OKAY, 3, 10, 0
     elif 49 <= dzn <= 64:
-        return Status.USM_NULL, 4, 15, None
+        return Status.OKAY, 4, 15, 0
     elif 65 <= dzn <= 79:
         return Status.OKAY, 5, 20, 30
     return Status.CUSTOM, None, None, None

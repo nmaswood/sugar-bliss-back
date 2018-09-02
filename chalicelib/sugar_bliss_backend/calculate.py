@@ -32,10 +32,10 @@ VALID_TIMES = {
 ZIP_CODE_PREFIX = '60'
 
 FOOD_MAXS = {
-    'miniCupcakes': (8, 56),
-    'regularCupcakes': (5, 52),
-    'cakePops': (23, 110),
-    'frenchMacarons': (17, 79),
+    'miniCupcakes': (1, 56),
+    'regularCupcakes': (1, 52),
+    'cakePops': (1, 110),
+    'frenchMacarons': (1, 79),
     'tiers': (1, 5),
     'other': (1, 5)
 }
