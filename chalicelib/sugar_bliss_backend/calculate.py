@@ -65,6 +65,8 @@ def validate(obj):
 
     non_zero = False
     for key in FOOD_KEYS:
+        # if key not in obj:
+            # continue
         try:
             num = int(obj[key])
         except Exception:
@@ -147,11 +149,11 @@ def calculate(food_obj, time_obj):
 
     prices_dict = params.price(food_obj)
 
-    if prices_dict['ld'] == 0 and prices_dict['usm'] == 0 and not prices_dict['custom']:
-        return {
-            'status': 'fail',
-            'errors': ['Could not calculate price for carriers.']
-        }
+    # if prices_dict['ld'] == 0 and prices_dict['usm'] == 0 and not prices_dict['custom']:
+        # return {
+            # 'status': 'fail',
+            # 'errors': ['Could not calculate price for carriers.']
+        # }
 
     combined = combine.combine(base_price_dict, prices_dict)
     return {

@@ -114,15 +114,15 @@ def determine_multiplier(start_time, end_time):
     four_pm = parse('4pm').time()
 
     multiplier = 1
-    if start_time < eight_am:
-        multiplier *= 2
-    if end_time > four_pm:
-        multiplier *= 2
+    # if start_time < eight_am:
+        # multiplier *= 2
+    # if end_time > four_pm:
+        # multiplier *= 2
 
-    if time_window_difference == 1:
-        multiplier *= 1.5
-    elif time_window_difference == 2:
-        multiplier *= 1.25
+    # if time_window_difference == 1:
+        # multiplier *= 1.5
+    # elif time_window_difference == 2:
+        # multiplier *= 1.25
 
     return multiplier
 
