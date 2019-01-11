@@ -10,13 +10,13 @@ from dateutil.parser import parse
                                  parse('12pm').time(),
                                  {'carrier_prices': [{'carrier': 'LS',
                                                       'date': 'Mon-Sun',
-                                                      'price': 23.75,
+                                                      'price': 19,
                                                       'time': '11:00:00-13:00:00'},
                                                      {'carrier': 'USM',
                                                       'date': 'Mon-Fri',
-                                                      'price': 30.0,
+                                                      'price': 24,
                                                       'time': '11:00:00-13:00:00'}],
-                                  'multiplier': 1.25,
+                                  'multiplier': 1,
                                   'status': 'success'}
                               ),
                          ))
