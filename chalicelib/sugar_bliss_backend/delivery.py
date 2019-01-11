@@ -5,6 +5,8 @@ import os.path
 
 import calendar
 
+from pdb import set_trace
+
 
 def get_overlap(a, b):
 
@@ -22,7 +24,7 @@ def get_dfs():
     root = os.path.dirname(__file__)
     _dir = 'csvs/delivery/'
 
-    files = ('city_final.csv', 'loop_final.csv', 'suburb_final.csv')
+    files = ('city.csv', 'loop.csv', 'suburb.csv')
     files = [
         os.path.join(root, _dir, f)
         for f in files
@@ -173,7 +175,7 @@ def get_dict(columns, times, carriers, row, date, start_time, end_time):
 
     for index in sorted(union):
         carrier = carriers[index]
-        price = row[index]
+        price = float(row[index])
 
         date = parsed_dates[index]
         if len(date) == 1:
@@ -209,7 +211,7 @@ def get_dict(columns, times, carriers, row, date, start_time, end_time):
 
         carrier_prices.append({
             'carrier': carrier,
-            'price': int(price) * multiplier,
+            'price': price * multiplier,
             'date': date,
             'time': time
         })
