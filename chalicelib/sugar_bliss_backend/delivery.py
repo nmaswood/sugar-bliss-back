@@ -1,11 +1,10 @@
+import calendar
+import os.path
+import re
+from pdb import set_trace
+
 import pandas as pd
 from dateutil.parser import parse
-import re
-import os.path
-
-import calendar
-
-from pdb import set_trace
 
 
 def get_overlap(a, b):
@@ -17,7 +16,9 @@ def get_overlap(a, b):
     left_prime, right_prime = b
 
     left_prime_hour, right_prime_hour = left_prime.hour, right_prime.hour
-    return max(0, min(right_hour, right_prime_hour) - max(left_hour, left_prime_hour))
+    return max(
+        0,
+        min(right_hour, right_prime_hour) - max(left_hour, left_prime_hour))
 
 
 def get_dfs():
@@ -25,10 +26,7 @@ def get_dfs():
     _dir = 'csvs/delivery/'
 
     files = ('city.csv', 'loop.csv', 'suburb.csv')
-    files = [
-        os.path.join(root, _dir, f)
-        for f in files
-    ]
+    files = [os.path.join(root, _dir, f) for f in files]
 
     def process_df(filename):
         df = pd.read_csv(filename)
@@ -117,14 +115,14 @@ def determine_multiplier(start_time, end_time):
 
     multiplier = 1
     # if start_time < eight_am:
-        # multiplier *= 2
+    # multiplier *= 2
     # if end_time > four_pm:
-        # multiplier *= 2
+    # multiplier *= 2
 
     # if time_window_difference == 1:
-        # multiplier *= 1.5
+    # multiplier *= 1.5
     # elif time_window_difference == 2:
-        # multiplier *= 1.25
+    # multiplier *= 1.25
 
     return multiplier
 
@@ -183,15 +181,10 @@ def get_dict(columns, times, carriers, row, date, start_time, end_time):
             date = calendar.day_abbr[first]
         elif len(date) == 2:
             first, second = date[0], date[1]
-            date = '{}-{}'.format(
-                calendar.day_abbr[first],
-                calendar.day_abbr[second]
-            )
+            date = '{}-{}'.format(calendar.day_abbr[first],
+                                  calendar.day_abbr[second])
         else:
-            return {
-                'status': 'fail',
-                'errors': 'Invalid date range'
-            }
+            return {'status': 'fail', 'errors': 'Invalid date range'}
 
         times = parsed_time[index]
         time = times[parsed_time_tuple[index]]
@@ -204,10 +197,7 @@ def get_dict(columns, times, carriers, row, date, start_time, end_time):
             second = time[1]
             time = '{}-{}'.format(first, second)
         else:
-            return {
-                'status': 'fail',
-                'errors': 'Invalid time range'
-            }
+            return {'status': 'fail', 'errors': 'Invalid time range'}
 
         carrier_prices.append({
             'carrier': carrier,
