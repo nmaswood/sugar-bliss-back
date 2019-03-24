@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import date, time
 from enum import Enum
-from typing import Dict
+from typing import Dict, List, Union
 
 
 class Carrier(Enum):
@@ -49,6 +49,15 @@ class CarrierDict:
     price: float
     date_: date
     time_: time
+
+
+@dataclass
+class ResponseObject:
+    carrier_dicts: List[CarrierDict]
+    price_result: PriceResultFinal
+    cheapest: Union[None, CarrierDict]
+    final_price: Union[None, float]
+    valid: Union[None, bool]
 
 
 class CalculationException(Exception):

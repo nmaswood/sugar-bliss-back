@@ -1,37 +1,54 @@
 from typing import List
 
-from . import app_types, combine, constants, delivery, params
+from . import app_types
 
 
-def combine(carrier_dicts: List[app_types.CarrierDict],
-            price_result: app_types.PriceResultFinal):
+def cheapest_time(
+        carrier_dicts: List[app_types.CarrierDict],
+        price_result: app_types.PriceResultFinal) -> app_types.ResponseObject:
 
+    ld = None
     min_ld = float('inf')
-    min_ld_i = -1
 
+    usm = None
     min_usm = float('inf')
-    min_usm_i = -1
 
-    carrier_prices = base_price_dict['carrier_prices']
+    for idx, carrier_dict in enumerate(carrier_dicts):
 
-    for idx, carrier_price in enumerate(carrier_dicts):
+        carrier = carrier_dict.carrier
+        price = carrier_dict.price
 
-        carrier = carrier_price['carrier']
-        price = carrier_price['price']
-
-        if carrier.lower() == 'ls':
+        if carrier == app_types.Carrier.ld:
             min_ld = min(min_ld, price)
-            min_ld_i = idx
-        elif carrier.lower() == 'usm':
+            ld = carrier_dict
+        elif carrier == app_types.Carrier.usm:
             min_usm = min(min_usm, price)
-            min_usm_i = idx
+            usm = carrier_dict
 
-    if min_ld_i != -1:
-        base_price_dict['best_ld_carrier'] = carrier_prices[min_ld_i]
-        base_price_dict['best_ld_price'] = food_item_dict['ld'] + min_ld
+    if ld is None and usm is None:
 
-    if min_usm_i != -1:
-        base_price_dict['best_usm'] = carrier_prices[min_usm_i]
-        base_price_dict['best_usm_price'] = food_item_dict['usm'] + min_usm
+        return app_types.ResponseObject(
+            carrier_dicts,
+            price_result,
+            None,
+            None,
+            False,
+        )
 
-    return d
+    ld_total = min_ld + price_result.ld
+    usm_total = min_usm + price_result.usm
+
+    cheapest_price = min(ld_total, usm_total)
+
+    if ld_total < usm_total:
+        cheapest_carrier = ld
+    else:
+        cheapest_carrier = usm
+
+    return app_types.ResponseObject(
+        carrier_dicts,
+        price_result,
+        cheapest_carrier,
+        cheapest_price,
+        True,
+    )
