@@ -1,3 +1,5 @@
+import dataclasses
+import json
 from typing import Dict, List
 
 from chalice import Chalice
@@ -26,7 +28,8 @@ def submit():
 
     calculation_input: app_types.CalculationInput = calculate.preprocess(
         json_obj)
+    calculation = calculate.calculate(calculation_input)
+    res = app_types.FinalResponseObject(calculation_input, calculation)
+    as_object = calculate.to_json(res)
 
-    res = calculate.calculate(calculation_input)
-
-    return res
+    return as_object

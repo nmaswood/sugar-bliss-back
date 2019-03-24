@@ -60,5 +60,11 @@ class ResponseObject:
     valid: Union[None, bool]
 
 
+@dataclass
+class FinalResponseObject:
+    input: CalculationInput
+    output: ResponseObject
+
+
 class CalculationException(Exception):
     pass

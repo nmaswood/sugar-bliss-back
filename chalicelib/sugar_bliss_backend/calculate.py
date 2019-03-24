@@ -1,8 +1,26 @@
+import dataclasses
+import datetime
+import json
 from typing import Any, Dict, List
 
 from dateutil.parser import parse
 
 from . import app_types, combine, constants, delivery, params
+
+PUBLIC_ENUMS = {
+    'Carrier': app_types.Carrier,
+}
+
+
+class EnhancedJSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, (datetime.date, datetime.datetime, datetime.time)):
+            return o.isoformat()
+        if type(o) in PUBLIC_ENUMS.values():
+            return o.value
+        if dataclasses.is_dataclass(o):
+            return dataclasses.asdict(o)
+        return super().default(o)
 
 
 def validate(obj: Dict[str, str]) -> List[str]:
@@ -62,7 +80,8 @@ def preprocess(obj: Dict[str, str]) -> app_types.CalculationInput:
                                       mapping)
 
 
-def calculate(calculation_input: app_types.CalculationInput) -> Dict[str, Any]:
+def calculate(calculation_input: app_types.CalculationInput
+              ) -> app_types.ResponseObject:
 
     zipcode_df = delivery.zipcode_to_df(calculation_input.zipcode)
 
@@ -72,5 +91,22 @@ def calculate(calculation_input: app_types.CalculationInput) -> Dict[str, Any]:
 
     prices_dict: app_types.PriceResultFinal = params.price(
         calculation_input.mapping)
-    breakpoint()
-    return combine.combine(carrier_dicts, prices_dict)
+    return combine.cheapest_time(carrier_dicts, prices_dict)
+
+
+def to_json(obj: app_types.ResponseObject) -> Dict[str, Any]:
+
+    as_json = json.dumps(obj, cls=EnhancedJSONEncoder)
+    as_object = json.loads(as_json)
+
+    def replace_dict(d):
+        new = {}
+        for k, v in d.items():
+            if isinstance(v, dict):
+                v = replace_dict(v)
+            if isinstance(v, list):
+                v = [replace_dict(x) for x in v]
+            new[k.rstrip('_')] = v
+        return new
+
+    return replace_dict(as_object)
