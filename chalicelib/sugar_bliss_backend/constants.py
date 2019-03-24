@@ -320,12 +320,64 @@ ZIPCODES = (
 )
 
 FOODS = [
-    ("miniCupcakes", "Mini Cupcakes"),
-    ("regularCupcakes", "Mini Cupcakes"),
-    ("cakePops", "Cake Pops"),
-    ("frenchMacarons", "French Macarons"),
-    ("tiers", "Tiers"),
-    ("additionalBags", "Additional Bags"),
+    {
+        "camel": "miniCupcakes",
+        "display": "Mini Cupcakes"
+    },
+    {
+        "camel": "regularCupcakes",
+        "display": "Mini Cupcakes"
+    },
+    {
+        "camel": "cakePops",
+        "display": "Cake Pops"
+    },
+    {
+        "camel": "frenchMacarons",
+        "display": "French Macarons"
+    },
+    {
+        "camel": "tiers",
+        "display": "Tiers"
+    },
+    {
+        "camel": "other",
+        "display": "Other"
+    },
 ]
 
-DATA = {"data": {"times": TIMES, "zipcodes": ZIPCODES, "foods": FOODS}}
+FOOD_KEYS = [x['camel'] for x in FOODS]
+
+OTHER_KEYS = {'zipCode', 'dateTime', 'time_start', 'time_end'}
+
+FOOD_MAXS = {
+    'miniCupcakes': (0, 56),
+    'regularCupcakes': (0, 52),
+    'cakePops': (0, 110),
+    'frenchMacarons': (0, 79),
+    'tiers': (0, 5),
+    'other': (0, 5)
+}
+
+DATA = {
+    "data": {
+        "times": TIMES,
+        "zipcodes": sorted(set(ZIPCODES)),
+        "foods": FOODS
+    }
+}
+
+DZN = {
+    'cakePops',
+    'frenchMacarons',
+    'miniCupcakes',
+    'regularCupcakes',
+}
+
+BAG = {
+    'other',
+    'tiers',
+}
+
+CSV_DIR = 'csvs/delivery'
+CSV_FILES = ('city.csv', 'loop.csv', 'suburb.csv')

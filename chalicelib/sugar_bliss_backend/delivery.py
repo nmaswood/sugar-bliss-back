@@ -1,10 +1,12 @@
 import calendar
 import os.path
 import re
-from pdb import set_trace
+from typing import Dict, List
 
 import pandas as pd
 from dateutil.parser import parse
+
+from . import app_types, constants
 
 
 def get_overlap(a, b):
@@ -18,15 +20,15 @@ def get_overlap(a, b):
     left_prime_hour, right_prime_hour = left_prime.hour, right_prime.hour
     return max(
         0,
-        min(right_hour, right_prime_hour) - max(left_hour, left_prime_hour))
+        min(right_hour, right_prime_hour) - max(left_hour, left_prime_hour),
+    )
 
 
-def get_dfs():
+def get_dfs() -> List[pd.DataFrame]:
     root = os.path.dirname(__file__)
-    _dir = 'csvs/delivery/'
-
-    files = ('city.csv', 'loop.csv', 'suburb.csv')
-    files = [os.path.join(root, _dir, f) for f in files]
+    files = [
+        os.path.join(root, constants.CSV_DIR, f) for f in constants.CSV_FILES
+    ]
 
     def process_df(filename):
         df = pd.read_csv(filename)
@@ -36,7 +38,7 @@ def get_dfs():
     return [process_df(f) for f in files]
 
 
-def zipcode_to_df(zipcode):
+def zipcode_to_df(zipcode) -> pd.DataFrame:
 
     dfs = get_dfs()
 
@@ -45,10 +47,10 @@ def zipcode_to_df(zipcode):
         if not row.empty:
             return df
 
-    return None
+    raise app_types.CalculationException(f"Could not find Zipcode {zipcode}")
 
 
-def select_rows(df, zipcode):
+def select_rows(df: pd.DataFrame, zipcode: str):
     row = df[df.Zipcode == zipcode]
 
     columns = df.columns
@@ -108,28 +110,15 @@ def parse_time(string):
     return [parse_single_unit(x) for x in by_comma]
 
 
-def determine_multiplier(start_time, end_time):
-    time_window_difference = end_time.hour - start_time.hour
-    eight_am = parse('8am').time()
-    four_pm = parse('4pm').time()
+def get_dict(
+        calculation_input: app_types.CalculationInput,
+        columns,
+        times,
+        carriers,
+        row,
+) -> List[app_types.CarrierDict]:
 
-    multiplier = 1
-    # if start_time < eight_am:
-    # multiplier *= 2
-    # if end_time > four_pm:
-    # multiplier *= 2
-
-    # if time_window_difference == 1:
-    # multiplier *= 1.5
-    # elif time_window_difference == 2:
-    # multiplier *= 1.25
-
-    return multiplier
-
-
-def get_dict(columns, times, carriers, row, date, start_time, end_time):
-
-    weekday = date.weekday()
+    weekday = calculation_input.date_.weekday()
     parsed_dates = [parse_date(x) for x in columns]
 
     date_indexes = set()
@@ -152,7 +141,7 @@ def get_dict(columns, times, carriers, row, date, start_time, end_time):
 
     parsed_time_tuple = {}
 
-    time_tuple = start_time, end_time
+    time_tuple = calculation_input.time_start, calculation_input.time_end
 
     for idx, date_tuples in enumerate(parsed_time):
         for idx_prime, time_tuple_prime in enumerate(date_tuples):
@@ -167,12 +156,10 @@ def get_dict(columns, times, carriers, row, date, start_time, end_time):
     # TODO This truncates to a single one.
     # Should check optimal price first
 
-    multiplier = determine_multiplier(start_time, end_time)
-
     carrier_prices = []
 
     for index in sorted(union):
-        carrier = carriers[index]
+        carrier = carriers[index].lower()
         price = float(row[index])
 
         date = parsed_dates[index]
@@ -184,7 +171,7 @@ def get_dict(columns, times, carriers, row, date, start_time, end_time):
             date = '{}-{}'.format(calendar.day_abbr[first],
                                   calendar.day_abbr[second])
         else:
-            return {'status': 'fail', 'errors': 'Invalid date range'}
+            raise app_types.CalculationException('Invalid date range')
 
         times = parsed_time[index]
         time = times[parsed_time_tuple[index]]
@@ -197,33 +184,35 @@ def get_dict(columns, times, carriers, row, date, start_time, end_time):
             second = time[1]
             time = '{}-{}'.format(first, second)
         else:
-            return {'status': 'fail', 'errors': 'Invalid time range'}
+            raise app_types.CalculationException('Invalid date range')
 
-        carrier_prices.append({
-            'carrier': carrier,
-            'price': price * multiplier,
-            'date': date,
-            'time': time
-        })
+        carrier = carrier.lower()
+        carrier = 'ld' if carrier == 'ls' else carrier
+        carrier_dict = app_types.CarrierDict(app_types.Carrier[carrier], price,
+                                             date, time)
+        carrier_prices.append(carrier_dict)
 
     if not carrier_prices:
-        return {
-            'status': 'fail',
-            'errors': 'Could not find a valid time for either carrier.'
-        }
+        raise app_types.CalculationException(
+            'Could not find a valid time for either carrier.')
 
-    return {
-        'status': 'success',
-        'multiplier': multiplier,
-        'carrier_prices': carrier_prices,
-    }
+    return carrier_prices
 
 
-def return_carrier_and_prices(zipcode_df, zipcode, date, start_time, end_time):
-    columns, times, carriers, row = select_rows(zipcode_df, zipcode)
+def return_carrier_and_prices(
+        calculation_input: app_types.CalculationInput,
+        zipcode_df: pd.DataFrame,
+) -> List[app_types.CarrierDict]:
+    columns, times, carriers, row = select_rows(zipcode_df,
+                                                calculation_input.zipcode)
 
     columns_prime, times_prime, carriers_prime, row_prime = filter_by_carriers(
         columns, times, carriers, row)
 
-    return get_dict(columns_prime, times_prime, carriers_prime, row_prime,
-                    date, start_time, end_time)
+    return get_dict(
+        calculation_input,
+        columns_prime,
+        times_prime,
+        carriers_prime,
+        row_prime,
+    )

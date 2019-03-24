@@ -1,9 +1,10 @@
-def combine(base_price_dict, food_item_dict):
+from typing import List
 
-    d = {
-        'base_price_dict': base_price_dict,
-        'food_item_dict': food_item_dict
-    }
+from . import app_types, combine, constants, delivery, params
+
+
+def combine(carrier_dicts: List[app_types.CarrierDict],
+            price_result: app_types.PriceResultFinal):
 
     min_ld = float('inf')
     min_ld_i = -1
@@ -13,7 +14,7 @@ def combine(base_price_dict, food_item_dict):
 
     carrier_prices = base_price_dict['carrier_prices']
 
-    for idx, carrier_price in enumerate(carrier_prices):
+    for idx, carrier_price in enumerate(carrier_dicts):
 
         carrier = carrier_price['carrier']
         price = carrier_price['price']
