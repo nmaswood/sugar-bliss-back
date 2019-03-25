@@ -1,3 +1,0 @@
-certifi==2019.3.9
--e git+git@github.com:nmaswood/sugar-bliss-back.git@dda2ce44a761d15a1cd736591f6d8a4a37872e7e#egg=sugarbliss
-sugarbliss-backend==0.0.0
