@@ -326,7 +326,7 @@ FOODS = [
     },
     {
         "camel": "regularCupcakes",
-        "display": "Mini Cupcakes"
+        "display": "Regular Cupcakes"
     },
     {
         "camel": "cakePops",

@@ -1,5 +1,4 @@
 import dataclasses
-import datetime
 import json
 from typing import Any, Dict, List
 
@@ -12,10 +11,15 @@ PUBLIC_ENUMS = {
 }
 
 
+def to_camel_case(snake_str):
+    components = snake_str.split('_')
+    # We capitalize the first letter of each component except the first one
+    # with the 'title' method and join them together.
+    return components[0] + ''.join(x.title() for x in components[1:])
+
+
 class EnhancedJSONEncoder(json.JSONEncoder):
     def default(self, o):
-        if isinstance(o, (datetime.date, datetime.datetime, datetime.time)):
-            return o.isoformat()
         if type(o) in PUBLIC_ENUMS.values():
             return o.value
         if dataclasses.is_dataclass(o):
@@ -106,7 +110,8 @@ def to_json(obj: app_types.ResponseObject) -> Dict[str, Any]:
                 v = replace_dict(v)
             if isinstance(v, list):
                 v = [replace_dict(x) for x in v]
-            new[k.rstrip('_')] = v
+            key = to_camel_case(k.rstrip('_'))
+            new[key] = v
         return new
 
     return replace_dict(as_object)

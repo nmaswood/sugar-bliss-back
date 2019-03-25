@@ -4,6 +4,10 @@ from enum import Enum
 from typing import Dict, List, Union
 
 
+class CalculationException(Exception):
+    pass
+
+
 class Carrier(Enum):
     ld = 'ld'
     usm = 'usm'
@@ -53,18 +57,7 @@ class CarrierDict:
 
 @dataclass
 class ResponseObject:
-    carrier_dicts: List[CarrierDict]
+    base_price: List[CarrierDict]
+    total: List[CarrierDict]
     price_result: PriceResultFinal
-    cheapest: Union[None, CarrierDict]
-    final_price: Union[None, float]
     valid: Union[None, bool]
-
-
-@dataclass
-class FinalResponseObject:
-    input: CalculationInput
-    output: ResponseObject
-
-
-class CalculationException(Exception):
-    pass

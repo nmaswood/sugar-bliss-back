@@ -28,8 +28,12 @@ def submit():
 
     calculation_input: app_types.CalculationInput = calculate.preprocess(
         json_obj)
-    calculation = calculate.calculate(calculation_input)
-    res = app_types.FinalResponseObject(calculation_input, calculation)
-    as_object = calculate.to_json(res)
+
+    try:
+        calculation = calculate.calculate(calculation_input)
+    except app_types.CalculationException as e:
+        return {'status': 'fail', 'errors': [str(e)]}
+
+    as_object = calculate.to_json(calculation)
 
     return as_object
