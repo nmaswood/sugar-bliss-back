@@ -1,16 +1,3 @@
--i https://pypi.org/simple
-attrs==17.4.0
-botocore==1.12.77
-chalice==1.6.2
-click==6.7
-docutils==0.14
-enum-compat==0.0.2
-jmespath==0.9.3
-numpy==1.15.4
-pandas==0.23.4
-python-dateutil==2.7.5 ; python_version >= '2.7'
-pytz==2018.9
-six==1.12.0
-typing==3.6.4
-urllib3==1.24.1 ; python_version >= '3.4'
-wheel==0.32.3
+certifi==2019.3.9
+-e git+git@github.com:nmaswood/sugar-bliss-back.git@dda2ce44a761d15a1cd736591f6d8a4a37872e7e#egg=sugarbliss
+sugarbliss-backend==0.0.0
